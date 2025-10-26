@@ -1,16 +1,14 @@
 //this is the serverside code for the data analysis/data cleaning software 
 #include <cstring>
 #include <iostream>
-#include <Ws2tcpip.h>
-#include <windows.h>
-//#include <netinet/in.h>
-#include <winsock.h>
+#include <netinet/in.h>
 #include <unistd.h>
-
-
+#include <bits/stdc++.h>
+#include <string>
 using namespace std;
 
 int main(){
+    bool keepOpen=true;
     int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
 
     // specifying the address
@@ -29,10 +27,15 @@ int main(){
     int clientSocket = accept(serverSocket, nullptr, nullptr);
 
     // recieving data
-    char buffer[1024] = { 0 };
-    recv(clientSocket, buffer, sizeof(buffer), 0);
-    cout << "Message from client: " << buffer << endl;
-
+    while(keepOpen){
+        char buffer[1024] = { 0 }; 
+        recv(clientSocket, buffer, sizeof(buffer), 0);
+        if(sizeof(buffer)==0){
+            keepOpen=false;
+        }else{
+            cout << "Message from client: " << buffer << endl;
+        }
+}
     // closing the socket.
     close(serverSocket);
     return 0;
