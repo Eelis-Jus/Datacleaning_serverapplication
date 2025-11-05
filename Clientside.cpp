@@ -23,13 +23,21 @@ int main(){
 
    //////
    //TODO:
-   //-send size of the message before the message
+   //find out what ? is in the sizeofmsg message
+   //make so, that the server doesn't throw error when client sends the "terminateconnection" message
    //////
     string message;
+    string sizeofmsg;
     while(keepMessaging){     // sending data
         cout<<"give your message: "<<"\n";
         cin>>message;
+        //sizeofmsg=to_string(sizeof(message));
+        //send(clientSocket, sizeofmsg.c_str(), strlen(sizeofmsg.c_str()), 0); //send the size of message
+        //sleep(1);
         send(clientSocket, message.c_str(), strlen(message.c_str()), 0);
+        char buffer[1024] = { 0 }; 
+       // recv(clientSocket, buffer, sizeof(buffer), 0); nämä ovat sitä varten, kun halutaan implementoida vastaus serveriltä
+       // cout<<"message from server: "<<buffer<<"\n";
         do{
         cout<<"keep messsaging? (y/n)"<<"\n";
         cin>>keepconnection;
@@ -38,13 +46,15 @@ int main(){
         if(keepconnection=='y'){
 
         }else{
-            char terminatemsg[0];
-            send(clientSocket, terminatemsg, strlen(terminatemsg), 0);
+            string terminatemsg="TerminateConncetion";
+            //sizeofmsg=to_string(sizeof(terminatemsg));
+            //send(clientSocket, sizeofmsg.c_str(), strlen(sizeofmsg.c_str()), 0); //send the size of message
+            send(clientSocket, terminatemsg.c_str(), strlen(terminatemsg.c_str()), 0);
             keepMessaging=false;
         }
 
     }
-    cout<<"closing connection...";
+    cout<<"closing connection..."<<"\n";
     sleep(1);
     // closing socket
     close(clientSocket);
