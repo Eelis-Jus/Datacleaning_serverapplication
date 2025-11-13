@@ -1,12 +1,33 @@
 //this is the clientside code for the client-server part of the data cleaning/data analysis software
 #include <cstring>
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <unistd.h>
 #include <bits/stdc++.h>
 using namespace std;
+
+//convert img to binary and back: 
+//https://www.youtube.com/watch?v=ChBDuxJSknI
+//https://www.youtube.com/watch?v=2iZu01UHxfE
+
+char convertFileToBinary(string file_to_convert){
+    ifstream convertfile(file_to_convert, ios::in | ios::binary);
+    ofstream fileToSend("file_binary.txt", ios::out | ios::app);
+
+    char ch;
+    while(!convertfile.eof()){
+        ch=convertfile.get();
+        fileToSend.put(ch);
+    }
+    cout<<"file succesfully converted"<<"\n";
+    convertfile.close();
+    fileToSend.close();
+    return ch;
+}
+
 
 int main(){
     bool keepMessaging=true;
@@ -31,10 +52,15 @@ int main(){
     while(keepMessaging){     // sending data
         cout<<"give your message: "<<"\n";
         cin>>message;
+
         //sizeofmsg=to_string(sizeof(message));
         //send(clientSocket, sizeofmsg.c_str(), strlen(sizeofmsg.c_str()), 0); //send the size of message
         //sleep(1);
-        send(clientSocket, message.c_str(), strlen(message.c_str()), 0);
+        system("GenerateCsv.py");
+        char mzg=convertFileToBinary("test.csv");
+        
+        send(clientSocket, message.c_str(), mzg, 0); //test to send the binary of a file
+        //send(clientSocket, message.c_str(), strlen(message.c_str()), 0);
         char buffer[1024] = { 0 }; 
        // recv(clientSocket, buffer, sizeof(buffer), 0); nämä ovat sitä varten, kun halutaan implementoida vastaus serveriltä
        // cout<<"message from server: "<<buffer<<"\n";

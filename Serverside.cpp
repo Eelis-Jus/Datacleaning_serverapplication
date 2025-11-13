@@ -1,11 +1,26 @@
 //this is the serverside code for the data analysis/data cleaning software 
 #include <cstring>
 #include <iostream>
+#include <fstream>
 #include <netinet/in.h>
 #include <unistd.h>
 #include <bits/stdc++.h>
 #include <string>
 using namespace std;
+
+
+char binaryToFile(char fileBinary){
+  ofstream fileToBeMade("fileToBeTreated.csv", ios::out | ios::app);
+
+  fileToBeMade.put(fileBinary);
+
+
+}
+
+
+
+
+
 
 int main(){
     bool keepOpen=true;
@@ -35,6 +50,7 @@ int main(){
        // int sizeToInt=stoi(size);
         //char buffer[sizeToInt] = { 0 }; 
       //  delete msgSize; //delete the memory used to house the size of message
+      
       char buffer[ 1024 ] = { 0 };
         recv(clientSocket, buffer, sizeof(buffer), 0);
         string terminateMSg=buffer;
