@@ -1,10 +1,12 @@
 //this is the clientside code for the client-server part of the data cleaning/data analysis software
 #include <cstring>
 #include <iostream>
+#include <fcntl.h>
 #include <fstream>
 #include <string>
 #include <netinet/in.h>
 #include <sys/socket.h>
+#include <sys/sendfile.h>
 #include <unistd.h>
 #include <bits/stdc++.h>
 using namespace std;
@@ -12,26 +14,32 @@ using namespace std;
 //convert img to binary and back: 
 //https://www.youtube.com/watch?v=ChBDuxJSknI
 //https://www.youtube.com/watch?v=2iZu01UHxfE
+//https://stackoverflow.com/questions/11952898/c-send-and-receive-file hyvä vinkki socket ohjelmointiin
+//char convertFileToBinary(string file_to_convert){
+//    ifstream convertfile(file_to_convert, ios::in | ios::binary);
+//    ofstream fileToSend("file_binary.txt", ios::out | ios::app);
+//
+//    char ch;
+//    while(!convertfile.eof()){
+//        ch=convertfile.get();
+//        fileToSend.put(ch);
+//    }
+//    cout<<"file succesfully converted"<<"\n";
+//    convertfile.close();
+//    fileToSend.close();
+//    return ch;
+//}
 
-char convertFileToBinary(string file_to_convert){
-    ifstream convertfile(file_to_convert, ios::in | ios::binary);
-    ofstream fileToSend("file_binary.txt", ios::out | ios::app);
 
-    char ch;
-    while(!convertfile.eof()){
-        ch=convertfile.get();
-        fileToSend.put(ch);
-    }
-    cout<<"file succesfully converted"<<"\n";
-    convertfile.close();
-    fileToSend.close();
-    return ch;
-}
 
 
 int main(){
     bool keepMessaging=true;
     char keepconnection;
+    int fileData;
+    struct stat file_stat;
+        int offset;
+        int remain_data;
     cout<<"Welcome to the program!"<<"\n";
     int clientSocket=socket(AF_INET, SOCK_STREAM, 0);
     sockaddr_in Serveraddress; 
@@ -42,7 +50,7 @@ int main(){
     connect(clientSocket, (struct sockaddr*)&Serveraddress,sizeof(Serveraddress));  //Establish the connection
 
 
-   //////
+   ////// 
    //TODO:
    //find out what ? is in the sizeofmsg message
    //make so, that the server doesn't throw error when client sends the "terminateconnection" message
@@ -53,15 +61,17 @@ int main(){
         cout<<"give your message: "<<"\n";
         cin>>message;
 
-        //sizeofmsg=to_string(sizeof(message));
-        //send(clientSocket, sizeofmsg.c_str(), strlen(sizeofmsg.c_str()), 0); //send the size of message
-        //sleep(1);
-        system("GenerateCsv.py");
-        char mzg=convertFileToBinary("test.csv");
+                
+        //system("GenerateCsv.py");
+        //char mzg=convertFileToBinary("test.csv");
+        fileData=open("test.csv", O_RDONLY);
         
-        send(clientSocket, message.c_str(), mzg, 0); //test to send the binary of a file
+ //       cout<<"mzg: "<<mzg<<"\n";
+        //send(clientSocket, message.c_str(),  mzg, 0); //test to send the binary of a file
+        offset=0;
+       sendfile(clientSocket, fileData, 0, BUFSIZ);
         //send(clientSocket, message.c_str(), strlen(message.c_str()), 0);
-        char buffer[1024] = { 0 }; 
+        
        // recv(clientSocket, buffer, sizeof(buffer), 0); nämä ovat sitä varten, kun halutaan implementoida vastaus serveriltä
        // cout<<"message from server: "<<buffer<<"\n";
         do{

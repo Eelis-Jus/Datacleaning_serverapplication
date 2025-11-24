@@ -12,3 +12,4 @@ def generatecsv():
         df.to_csv('test.csv', index=False)
     else:    
         df.to_csv('test.csv', index=False)
+generatecsv()        

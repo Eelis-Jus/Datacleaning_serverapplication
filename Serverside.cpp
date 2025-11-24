@@ -9,21 +9,17 @@
 using namespace std;
 
 
-char binaryToFile(char fileBinary){
+void binaryToFile(char fileBinary){
   ofstream fileToBeMade("fileToBeTreated.csv", ios::out | ios::app);
-
   fileToBeMade.put(fileBinary);
-
-
+  fileToBeMade.clear();
 }
 
-
-
-
-
-
 int main(){
-    bool keepOpen=true;
+  bool keepOpen=true;
+
+  FILE *received_file;
+
     int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
 
     // specifying the address
@@ -49,16 +45,23 @@ int main(){
       //  cout<<"size of msg; "<<size<<"\n"; //testing that this works
        // int sizeToInt=stoi(size);
         //char buffer[sizeToInt] = { 0 }; 
-      //  delete msgSize; //delete the memory used to house the size of message
-      
-      char buffer[ 1024 ] = { 0 };
+      //  delete msgSize; //delete the memory used to house the size of message     
+      char buffer[ 3072 ] = { 0 };
         recv(clientSocket, buffer, sizeof(buffer), 0);
         string terminateMSg=buffer;
         if(terminateMSg=="TerminateConncetion"){
             keepOpen=false;
-            cout<<"connection terminated..."<<"\n";
+            cout<<"connectionee terminated..."<<"\n";
         }else{
-            cout << "Message from client: " << buffer << endl;
+          
+          //char message[terminateMSg.length() +1];
+          //strcpy(message, terminateMSg.c_str());
+          //received_file=fopen("test.csv", "w");
+          //binaryToFile(message);
+          ofstream filetoedit("editfile.csv");
+          filetoedit<<buffer<<endl;
+          filetoedit.close();
+          cout << "Message from client: " << buffer << endl;
           //  string message="message received";
           //  send(clientSocket, message.c_str(), strlen(message.c_str()), 0);
         }
