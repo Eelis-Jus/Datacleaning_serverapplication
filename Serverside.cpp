@@ -3,9 +3,11 @@
 #include <iostream>
 #include <fstream>
 #include <netinet/in.h>
+#include <sys/sendfile.h>
 #include <unistd.h>
 #include <bits/stdc++.h>
 #include <string>
+#include <fcntl.h>
 using namespace std;
 
 
@@ -17,7 +19,7 @@ void binaryToFile(char fileBinary){
 
 int main(){
   bool keepOpen=true;
-
+  int fileData;
   FILE *received_file;
 
     int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
@@ -46,7 +48,7 @@ int main(){
        // int sizeToInt=stoi(size);
         //char buffer[sizeToInt] = { 0 }; 
       //  delete msgSize; //delete the memory used to house the size of message     
-      char buffer[ 3072 ] = { 0 };
+        char buffer[ 3072 ] = { 0 };
         recv(clientSocket, buffer, sizeof(buffer), 0);
         string terminateMSg=buffer;
         if(terminateMSg=="TerminateConncetion"){
@@ -61,7 +63,10 @@ int main(){
           ofstream filetoedit("editfile.csv");
           filetoedit<<buffer<<endl;
           filetoedit.close();
-          cout << "Message from client: " << buffer << endl;
+          int offset=0;
+          fileData=open("editfile.csv", O_RDONLY);
+          sendfile(clientSocket, fileData, 0, BUFSIZ);
+          //cout << "Message from client: " << buffer << endl;
           //  string message="message received";
           //  send(clientSocket, message.c_str(), strlen(message.c_str()), 0);
         }

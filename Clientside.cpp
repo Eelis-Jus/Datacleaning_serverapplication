@@ -10,30 +10,8 @@
 #include <unistd.h>
 #include <bits/stdc++.h>
 using namespace std;
-
-//convert img to binary and back: 
-//https://www.youtube.com/watch?v=ChBDuxJSknI
-//https://www.youtube.com/watch?v=2iZu01UHxfE
-//https://stackoverflow.com/questions/11952898/c-send-and-receive-file hyvä vinkki socket ohjelmointiin
-//char convertFileToBinary(string file_to_convert){
-//    ifstream convertfile(file_to_convert, ios::in | ios::binary);
-//    ofstream fileToSend("file_binary.txt", ios::out | ios::app);
-//
-//    char ch;
-//    while(!convertfile.eof()){
-//        ch=convertfile.get();
-//        fileToSend.put(ch);
-//    }
-//    cout<<"file succesfully converted"<<"\n";
-//    convertfile.close();
-//    fileToSend.close();
-//    return ch;
-//}
-
-
-
-
-int main(){
+ 
+ int main(){
     bool keepMessaging=true;
     char keepconnection;
     int fileData;
@@ -69,11 +47,16 @@ int main(){
  //       cout<<"mzg: "<<mzg<<"\n";
         //send(clientSocket, message.c_str(),  mzg, 0); //test to send the binary of a file
         offset=0;
-       sendfile(clientSocket, fileData, 0, BUFSIZ);
+        sendfile(clientSocket, fileData, 0, BUFSIZ);
         //send(clientSocket, message.c_str(), strlen(message.c_str()), 0);
-        
+        sleep(2);
+        char buffer[ 3072 ] = { 0 };
+        recv(clientSocket, buffer, sizeof(buffer), 0);
        // recv(clientSocket, buffer, sizeof(buffer), 0); nämä ovat sitä varten, kun halutaan implementoida vastaus serveriltä
-       // cout<<"message from server: "<<buffer<<"\n";
+        ofstream filetoedit("backfromserver.csv");
+        filetoedit<<buffer<<endl;
+        filetoedit.close();
+        cout<<"message received from server: "<<buffer<<"\n";
         do{
         cout<<"keep messsaging? (y/n)"<<"\n";
         cin>>keepconnection;
