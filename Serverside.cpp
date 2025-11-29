@@ -56,13 +56,16 @@ int main(){
             cout<<"connectionee terminated..."<<"\n";
         }else{
           
-          //char message[terminateMSg.length() +1];
-          //strcpy(message, terminateMSg.c_str());
-          //received_file=fopen("test.csv", "w");
-          //binaryToFile(message);
+          
+          
           ofstream filetoedit("editfile.csv");
           filetoedit<<buffer<<endl;
           filetoedit.close();
+          string str="";
+          str = 'python dataCleaningandVisualization.py editfile.csv';
+          sleep(20);
+          const char* command = str.c_str();
+          system(command);
           int offset=0;
           fileData=open("editfile.csv", O_RDONLY);
           sendfile(clientSocket, fileData, 0, BUFSIZ);
