@@ -48,26 +48,25 @@ int main(){
        // int sizeToInt=stoi(size);
         //char buffer[sizeToInt] = { 0 }; 
       //  delete msgSize; //delete the memory used to house the size of message     
-        char buffer[ 3072 ] = { 0 };
+      char filename[ 3072 ] = { 0 };  
+      recv(clientSocket, filename, sizeof(filename), 0); //get the file back from the server
+      char buffer[ 3072 ] = { 0 };
         recv(clientSocket, buffer, sizeof(buffer), 0);
         string terminateMSg=buffer;
         if(terminateMSg=="TerminateConncetion"){
             keepOpen=false;
             cout<<"connectionee terminated..."<<"\n";
         }else{
-          
-          
-          
-          ofstream filetoedit("editfile.csv");
+          ofstream filetoedit(filename);
           filetoedit<<buffer<<endl;
           filetoedit.close();
-          string str="";
-          str = 'python dataCleaningandVisualization.py editfile.csv';
-          sleep(20);
+          string fname=filename; //this is technically just filename again, should be removed if possible
+          string str="python3 dataCleaningandVisualization.py "+fname;
           const char* command = str.c_str();
           system(command);
+          //sleep(20);
           int offset=0;
-          fileData=open("editfile.csv", O_RDONLY);
+          fileData=open(filename, O_RDONLY);
           sendfile(clientSocket, fileData, 0, BUFSIZ);
           //cout << "Message from client: " << buffer << endl;
           //  string message="message received";
