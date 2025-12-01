@@ -7,14 +7,15 @@
 #include <unistd.h>
 #include <bits/stdc++.h>
 #include <string>
+#include <vector>
 #include <fcntl.h>
 using namespace std;
 
 
-void binaryToFile(char fileBinary){
-  ofstream fileToBeMade("fileToBeTreated.csv", ios::out | ios::app);
-  fileToBeMade.put(fileBinary);
-  fileToBeMade.clear();
+string FileNameAndFileSize(char *msg){
+  string info = msg;
+  const size_t Pos = info.find(';');
+
 }
 
 int main(){
@@ -41,21 +42,22 @@ int main(){
 
     // recieving data
     while(keepOpen){ 
-      //  char *msgSize = new char;
-      //  recv(clientSocket, msgSize, sizeof(msgSize), 0); //get the size of the coming message
-      //  string size=msgSize; //convert char to string, so I can use stoi to convert the size to int
-      //  cout<<"size of msg; "<<size<<"\n"; //testing that this works
-       // int sizeToInt=stoi(size);
-        //char buffer[sizeToInt] = { 0 }; 
-      //  delete msgSize; //delete the memory used to house the size of message     
-      char filename[ 3072 ] = { 0 };  
-      recv(clientSocket, filename, sizeof(filename), 0); //get the file back from the server
-      char buffer[ 3072 ] = { 0 };
-        recv(clientSocket, buffer, sizeof(buffer), 0);
-        string terminateMSg=buffer;
+      /*
+      todo:
+      add check for the first recv(),that if it's the termination message, it doesn't start to parse it
+      */
+      char filenameAndFileSize[ 1024 ] = { 0 };  
+      recv(clientSocket, filenameAndFileSize, sizeof(filenameAndFileSize), 0); //get the file back from the server
+      string info = filenameAndFileSize;
+      const size_t Pos = info.find(';');
+      int fsize=stoi(info.substr(Pos + 1, std::string::npos)); //get the filesize from the filenameAndFileSize
+      string filename=info.substr(0, Pos); //get the filename
+      char buffer[ fsize ] = { 0 };
+      recv(clientSocket, buffer, sizeof(buffer), 0);
+      string terminateMSg=buffer;
         if(terminateMSg=="TerminateConncetion"){
-            keepOpen=false;
-            cout<<"connectionee terminated..."<<"\n";
+          keepOpen=false;
+          cout<<"connection terminated..."<<"\n";
         }else{
           ofstream filetoedit(filename);
           filetoedit<<buffer<<endl;
@@ -63,14 +65,10 @@ int main(){
           string fname=filename; //this is technically just filename again, should be removed if possible
           string str="python3 dataCleaningandVisualization.py "+fname;
           const char* command = str.c_str();
-          system(command);
-          //sleep(20);
+          system(command);    
           int offset=0;
-          fileData=open(filename, O_RDONLY);
+          fileData=open(filename.c_str(), O_RDONLY);
           sendfile(clientSocket, fileData, 0, BUFSIZ);
-          //cout << "Message from client: " << buffer << endl;
-          //  string message="message received";
-          //  send(clientSocket, message.c_str(), strlen(message.c_str()), 0);
         }
 }
     // closing the socket.

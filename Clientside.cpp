@@ -42,6 +42,9 @@ using namespace std;
     while(keepMessaging){     // sending data
         cout<<"give the name of your file: "<<"\n";
         cin>>message;
+        string fileSize=to_string(filesystem::file_size(message));
+        message=message+";"+fileSize;
+        
         send(clientSocket, message.c_str(), strlen(message.c_str()), 0); //send the name of the file
         sleep(2);
         fileData=open(message.c_str(), O_RDONLY);
