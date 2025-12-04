@@ -38,24 +38,32 @@ using namespace std;
 
    
     string message;
+    string sentFile;
     string sizeofmsg;
     while(keepMessaging){     // sending data
         cout<<"give the name of your file: "<<"\n";
-        cin>>message;
-        string fileSize=to_string(filesystem::file_size(message));
-        message=message+";"+fileSize;
-        
-        send(clientSocket, message.c_str(), strlen(message.c_str()), 0); //send the name of the file
+        cin>>sentFile;
+        //string currentPath=filesystem::current_path();
+        filesystem::path filePath = filesystem::current_path() / sentFile; 
+        //string filePath=filesystem::path(message);
+        cout<<"filepath: "<<filePath<<"\n";
+        string fileSize=to_string(filesystem::file_size(filePath));
+        message=sentFile+";"+fileSize;
+        cout<<"sending the size and name"<<"\n";
+        send(clientSocket, message.c_str(), strlen(message.c_str()), 0); //send the name and the size of the file
+        cout<<"sent the size and name"<<"\n";
         sleep(2);
-        fileData=open(message.c_str(), O_RDONLY);
-        filesize=filesystem::file_size(message);
-        offset=0;
-        sendfile(clientSocket, fileData, 0, BUFSIZ);
         
+        fileData=open(sentFile.c_str(), O_RDONLY);
+        //filesize=filesystem::file_size(message); //what has been this used?
+        offset=0;
+        cout<<"sending the file"<<"\n";
+        sendfile(clientSocket, fileData, 0, BUFSIZ);
+        cout<<"file sent"<<"\n";
         sleep(2);
         char buffer[ 3072 ] = { 0 };
         recv(clientSocket, buffer, sizeof(buffer), 0); //get the file back from the server
-        ofstream filetoedit(message);
+        ofstream filetoedit(sentFile);
         filetoedit<<buffer<<endl;
         filetoedit.close();
         cout<<"message received from server: "<<buffer<<"\n";
