@@ -5,6 +5,7 @@
 #include <netinet/in.h>
 #include <sys/sendfile.h>
 #include <unistd.h>
+#include <stdio.h>
 #include <bits/stdc++.h>
 #include <string>
 #include <vector>
@@ -23,7 +24,7 @@ bool isTerminateMessage(char *msg){
 
 }
 
-int main(){
+int main(){ 
   bool keepOpen;
   keepOpen=true;
   int fileData;
@@ -50,8 +51,9 @@ int main(){
     while(keepOpen){ 
       /*
       todo:
-      add check for the first recv(),that if it's the termination message, it doesn't start to parse it
+      
       */
+
       char filenameAndFileSize[ 1024 ] = { 0 };  
       recv(clientSocket, filenameAndFileSize, sizeof(filenameAndFileSize), 0); //get the file back from the server
       cout<<"check if message is termination message"<<"\n";
@@ -86,6 +88,7 @@ int main(){
           cout<<"sending the file back"<<"\n";
           fileData=open(filename.c_str(), O_RDONLY);
           sendfile(clientSocket, fileData, 0, BUFSIZ);
+          remove(filename.c_str()); //remove the file from the server
         }
 }
     // closing the socket.

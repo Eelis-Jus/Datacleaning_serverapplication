@@ -37,9 +37,9 @@ using namespace std;
 
 
    
-    string message;
-    string sentFile;
-    string sizeofmsg;
+    string message; //this is the whole first message, it includes the size of the file and name of the file
+    string sentFile; //name of the file
+    //string sizeofmsg; 
     while(keepMessaging){     // sending data
         cout<<"give the name of your file: "<<"\n";
         cin>>sentFile;
