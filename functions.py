@@ -8,10 +8,16 @@ import matplotlib.pyplot as plt
 def drop_emptycells(datasetname: str):  #works as intended
     data=pandas.read_csv(datasetname)
     data.dropna(inplace = True) #drops fully the line where one of the rows contains null or is empty
+    print("dropping empty cells")
     print(data.to_string())
+    data.to_csv(datasetname, index=False)
 
-def drop_duplicates(datasetname: str): #works as intended
+def drop_duplicates(datasetname: str): #doesn't work in conjunction with the drop emptycells
     data=pandas.read_csv(datasetname)
     data.drop_duplicates(inplace = True) #this function drops duplicates    
+    print("dropping duplicates")
     print(data.to_string())
-#def make
+    data.to_csv(datasetname, index=False)
+
+
+#def makeE
