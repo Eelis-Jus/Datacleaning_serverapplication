@@ -51,23 +51,26 @@ int main(){
     while(keepOpen){ 
       /*
       todo:
-      
       */
-
       char filenameAndFileSize[ 1024 ] = { 0 };  
       recv(clientSocket, filenameAndFileSize, sizeof(filenameAndFileSize), 0); //get the file back from the server
       cout<<"check if message is termination message"<<"\n";
       bool checkTermination=isTerminateMessage(filenameAndFileSize);
+
       if(checkTermination){
         keepOpen=false;
         break;        
       };
+
       cout<<"message is"<<filenameAndFileSize<<"\n";
       string info = filenameAndFileSize;
       const size_t Pos = info.find(';');
+
       int fsize=stoi(info.substr(Pos + 1, std::string::npos)); //get the filesize from the filenameAndFileSize
+
       string filename=info.substr(0, Pos); //get the filename
       cout<<"filename: "<<filename<<"\n";
+      cout<<"size of the file: "<<fsize<<"\n";
       char buffer[ fsize ] = { 0 };
       recv(clientSocket, buffer, sizeof(buffer), 0);
       string terminateMSg=buffer;
@@ -75,15 +78,16 @@ int main(){
           keepOpen=false;
           break;
         }else{
+
           ofstream filetoedit(filename);
           filetoedit<<buffer<<endl;
           filetoedit.close();
           string fname=filename; //this is technically just filename again, should be removed if possible
           cout<<"analyzing the file"<<"\n";
-          string str="python3 dataCleaningandVisualization.py "+fname;
-          cout<<"file analyzed"<<"\n";
+          string str="python3 dataCleaningandVisualization.py "+fname; 
           const char* command = str.c_str();
           system(command);    
+          cout<<"file analyzed"<<"\n";
           int offset=0;
           cout<<"sending the file back"<<"\n";
           fileData=open(filename.c_str(), O_RDONLY);
