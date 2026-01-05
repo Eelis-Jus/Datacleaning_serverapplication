@@ -14,9 +14,22 @@ using namespace std;
  
    ////// 
    //TODO:
-   //send the name and the size of the file before the file  
+   //  
    //
    //////
+
+string fileExists(string filename){ //check if the file exists
+string file = filename;
+    if(filesystem::exists(file)==true){
+        return "file exists";
+    }else if(filesystem::exists(file)==false){
+        return "file doesn't exist";
+    }else{
+        return "unknown error";
+    }
+}
+
+
 
  int main(){
     bool keepMessaging=true;
@@ -34,15 +47,18 @@ using namespace std;
     Serveraddress.sin_addr.s_addr = INADDR_ANY; //INADDR_ANY: Accept connections on any IP.
 
     connect(clientSocket, (struct sockaddr*)&Serveraddress,sizeof(Serveraddress));  //Establish the connection
-
-
    
-    string message;
-    string sentFile;
-    string sizeofmsg;
+    string message; //this is the whole first message, it includes the size of the file and name of the file
+    string sentFile; //name of the file
+    string file_exists;
+    //string sizeofmsg; 
     while(keepMessaging){     // sending data
-        cout<<"give the name of your file: "<<"\n";
-        cin>>sentFile;
+        do{
+            cout<<"give the name of your file: "<<"\n";
+            cin>>sentFile;
+            file_exists=fileExists(sentFile);
+            cout<<file_exists<<"\n";
+        }while(file_exists != "file exists");
         //string currentPath=filesystem::current_path();
         filesystem::path filePath = filesystem::current_path() / sentFile; 
         //string filePath=filesystem::path(message);
@@ -51,11 +67,11 @@ using namespace std;
         message=sentFile+";"+fileSize;
         cout<<"sending the size and name"<<"\n";
         send(clientSocket, message.c_str(), strlen(message.c_str()), 0); //send the name and the size of the file
-        cout<<"sent the size and name"<<"\n";
+        cout<<"size and name has been sent"<<"\n";
         sleep(2);
         
         fileData=open(sentFile.c_str(), O_RDONLY);
-        //filesize=filesystem::file_size(message); //what has been this used?
+        //filesize=filesystem::file_size(message); //what has this been used for?
         offset=0;
         cout<<"sending the file"<<"\n";
         sendfile(clientSocket, fileData, 0, BUFSIZ);
@@ -66,11 +82,12 @@ using namespace std;
         ofstream filetoedit(sentFile);
         filetoedit<<buffer<<endl;
         filetoedit.close();
+        cout<<"filename: "<<sentFile<<"\n";
         cout<<"message received from server: "<<buffer<<"\n";
         do{
-        cout<<"keep messsaging? (y/n)"<<"\n";
-        cin>>keepconnection;
-        keepconnection=tolower(keepconnection); //changing the closeconnetion answer to lowercase, so the user input doesn't matter
+            cout<<"keep messsaging? (y/n)"<<"\n";
+            cin>>keepconnection;
+            keepconnection=tolower(keepconnection); //changing the closeconnetion answer to lowercase, so the user input doesn't matter
         }while(keepconnection!='y' && keepconnection!='n');
         if(keepconnection=='y'){
 
