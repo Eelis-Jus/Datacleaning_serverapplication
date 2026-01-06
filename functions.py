@@ -60,7 +60,7 @@ def data_type_check(datasetname: str): #this function checks the datatype of the
     while column_number<column_amount:
         for x in range(0, 5):
             print(data_types_array[column_number, x])
-            if data_types_array[column_number, x]=="float": #if one of the values of the column is a float, then convert the column values to float
+            if data_types_array[column_number, x]=="float": #if one of the values of the column is a float, then convert all of the column values to float
                 print("is float")
                 data[column_names[column_number]]=data[column_names[column_number]].astype(float)
                 x=4    
@@ -72,4 +72,56 @@ def report_of_the_file(datasetname: str): #this is the function that will make s
         raw_data= f.read()
         result=chardet.detect(raw_data)
         encoding=result['encoding']
-
+    data=pandas.read_csv(datasetname, encoding=encoding)    
+    reportname=datasetname+"_report"    
+    #report=open(reportname, "x") #make the report file, should include a check if the file. Name needs a better unique identifier for each report
+    column_amount=len(data.columns) #get amount of columns
+    column_names=list(data.columns) #get the column names
+    high_amounts=np.empty(column_amount, dtype=object) # array for the max values
+    median_values=np.empty(column_amount, dtype=object) # arrEy for the median values
+    average_values=np.empty(column_amount, dtype=object) # array for the average values
+    lowest_values=np.empty(column_amount, dtype=object) # array for the lowest values
+    print(data.max())
+    for x in range(column_amount):
+        isString=isinstance(data[column_names[x]].iloc[0], str)
+        if isString==True:
+            print()
+            high_amounts[x]="column is strings"
+            median_values[x]="column is strings"
+            average_values[x]="column is strings"
+            lowest_values[x]="column is strings"
+        else:    
+            print(column_names[x]," max value is: ",data[column_names[x]].max())
+            print(column_names[x]," max value is in the row: ",data[column_names[x]].idxmax())
+            high_amounts[x]=data[column_names[x]].max()
+            print(column_names[x]," min value is: ",data[column_names[x]].min())
+            print(column_names[x]," min value is in the row: ",data[column_names[x]].idxmin())
+            lowest_values[x]=data[column_names[x]].min()
+            print(column_names[x]," avg value is: ",data[column_names[x]].mean())
+            average_values[x]=data[column_names[x]].mean()
+            print(column_names[x]," median value is: ",data[column_names[x]].median())
+            median_values[x]=data[column_names[x]].median()
+    #with open(reportname, "a") as f:
+    #f.write(reportname," automated report")
+    print(reportname," automated report")
+    #f.write("--------------------------------------------")
+    print("--------------------------------------------")
+    print()
+    for x in range(column_amount):
+            #f.write(column_names[x]," max value is: ",data[column_names[x]].max())
+            #f.write(column_names[x]," min value is: ",data[column_names[x]].min())
+            #f.write(column_names[x]," avg value is: ",data[column_names[x]].mean())
+            #f.write(column_names[x]," median value is: ",data[column_names[x]].median())
+            #f.write("--------------------------------------------")
+            isString=isinstance(data[column_names[x]].iloc[0], str)
+            if isString==True:
+                print(column_names[x]," columns is strings")
+                print("--------------------------------------------")
+                print()
+            else:    
+                print(column_names[x]," max value is: ",data[column_names[x]].max())
+                print(column_names[x]," min value is: ",data[column_names[x]].min())
+                print(column_names[x]," avg value is: ",data[column_names[x]].mean())
+                print(column_names[x]," median value is: ",data[column_names[x]].median())
+                print("--------------------------------------------")
+                print()

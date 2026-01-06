@@ -20,6 +20,7 @@ print(data.to_string())
 ft.drop_duplicates(filename) #this is for testing and usage
 ft.drop_emptycells(filename) #this is for testing and usage-  
 ft.data_type_check(filename)
+ft.report_of_the_file(filename)
 print(filename)
 #data.to_csv(filename, index=False)
 print('data processed')
