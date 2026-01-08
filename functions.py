@@ -73,7 +73,8 @@ def report_of_the_file(datasetname: str): #this is the function that will make s
         result=chardet.detect(raw_data)
         encoding=result['encoding']
     data=pandas.read_csv(datasetname, encoding=encoding)    
-    reportname=datasetname+"_report"    
+    dataset_name=datasetname.split(".") #get just the name of the file, but not the filetype (.csv) so when sending the report back, the .csv in the name doesn't cause problems 
+    reportname=dataset_name[0]+"automated_report.txt"    
     #report=open(reportname, "x") #make the report file, should include a check if the file. Name needs a better unique identifier for each report
     column_amount=len(data.columns) #get amount of columns
     column_names=list(data.columns) #get the column names
@@ -101,27 +102,47 @@ def report_of_the_file(datasetname: str): #this is the function that will make s
             average_values[x]=data[column_names[x]].mean()
             print(column_names[x]," median value is: ",data[column_names[x]].median())
             median_values[x]=data[column_names[x]].median()
-    #with open(reportname, "a") as f:
-    #f.write(reportname," automated report")
-    print(reportname," automated report")
+    with open(reportname, "a") as f:
+        f.write(reportname)
+        f.write("\n")
+        f.write("--------------------------------------------")
+        f.write("\n")
+        for x in range(column_amount):
+            isString=isinstance(data[column_names[x]].iloc[0], str)
+            if isString==True:
+                col_is_str=column_names[x]," columns is strings \n"
+                f.write(str(col_is_str))
+                f.write("\n")
+                f.write("--------------------------------------------\n")
+                f.write("\n")
+                #print(column_names[x]," columns is strings")
+                #print()
+                #print("--------------------------------------------")
+                #print()
+            else:    
+                max_val=column_names[x]," max value is: ",data[column_names[x]].max()
+                f.write(str(max_val))
+                f.write("\n")
+                min_val=column_names[x]," min value is: ",data[column_names[x]].min()
+                f.write(str(min_val))
+                f.write("\n")
+                avg_val=column_names[x]," avg value is: ",data[column_names[x]].mean()
+                f.write(str(avg_val))
+                f.write("\n")
+                median_val=column_names[x]," median value is: ",data[column_names[x]].median()
+                f.write(str(median_val))
+                f.write("\n")
+                f.write("--------------------------------------------\n")
+                f.write("\n")
+                #print(column_names[x]," max value is: ",data[column_names[x]].max())
+                #print(column_names[x]," min value is: ",data[column_names[x]].min())
+                #print(column_names[x]," avg value is: ",data[column_names[x]].mean())
+                #print(column_names[x]," median value is: ",data[column_names[x]].median())
+                #print()
+                #print("--------------------------------------------")
+                #print()
+    #print(reportname," automated report")
     #f.write("--------------------------------------------")
     print("--------------------------------------------")
     print()
-    for x in range(column_amount):
-            #f.write(column_names[x]," max value is: ",data[column_names[x]].max())
-            #f.write(column_names[x]," min value is: ",data[column_names[x]].min())
-            #f.write(column_names[x]," avg value is: ",data[column_names[x]].mean())
-            #f.write(column_names[x]," median value is: ",data[column_names[x]].median())
-            #f.write("--------------------------------------------")
-            isString=isinstance(data[column_names[x]].iloc[0], str)
-            if isString==True:
-                print(column_names[x]," columns is strings")
-                print("--------------------------------------------")
-                print()
-            else:    
-                print(column_names[x]," max value is: ",data[column_names[x]].max())
-                print(column_names[x]," min value is: ",data[column_names[x]].min())
-                print(column_names[x]," avg value is: ",data[column_names[x]].mean())
-                print(column_names[x]," median value is: ",data[column_names[x]].median())
-                print("--------------------------------------------")
-                print()
+    

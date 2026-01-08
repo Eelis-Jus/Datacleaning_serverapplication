@@ -1,0 +1,23 @@
+ScriptTestFileautomated_report.txt
+--------------------------------------------
+('ID', ' max value is: ', 17)
+('ID', ' min value is: ', 1)
+('ID', ' avg value is: ', 9.142857142857142)
+('ID', ' median value is: ', 9.5)
+--------------------------------------------
+
+('Name', ' columns is strings \n')
+--------------------------------------------
+
+('Age', ' max value is: ', 50.0)
+('Age', ' min value is: ', 25.0)
+('Age', ' avg value is: ', 34.857142857142854)
+('Age', ' median value is: ', 34.5)
+--------------------------------------------
+
+('Score', ' max value is: ', 92.5)
+('Score', ' min value is: ', 73.5)
+('Score', ' avg value is: ', 84.82142857142857)
+('Score', ' median value is: ', 86.75)
+--------------------------------------------
+
