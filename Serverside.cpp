@@ -63,11 +63,7 @@ int main(){
 
     // recieving data
     while(keepOpen){ 
-      /*
-      todo:
-      */
-
-      
+    
       char filenameAndFileSize[ 1024 ] = { 0 };  
       recv(clientSocket, filenameAndFileSize, sizeof(filenameAndFileSize), 0); //get the file back from the server
       cout<<"check if message is termination message"<<"\n";
@@ -78,7 +74,6 @@ int main(){
         break;        
       };
 
-      cout<<"message is"<<filenameAndFileSize<<"\n";
       string info = filenameAndFileSize;
       const size_t Pos = info.find(';');
 

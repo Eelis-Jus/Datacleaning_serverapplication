@@ -92,8 +92,7 @@ def report_of_the_file(datasetname: str): #this is the function that will make s
             average_values[x]="column is strings"
             lowest_values[x]="column is strings"
         else:    
-            print(column_names[x]," max value is: ",data[column_names[x]].max())
-            print(column_names[x]," max value is in the row: ",data[column_names[x]].idxmax())
+            
             high_amounts[x]=data[column_names[x]].max()
             print(column_names[x]," min value is: ",data[column_names[x]].min())
             print(column_names[x]," min value is in the row: ",data[column_names[x]].idxmin())
