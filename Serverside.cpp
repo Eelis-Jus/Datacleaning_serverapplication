@@ -12,7 +12,6 @@
 #include <fcntl.h>
 using namespace std;
 
-
 bool isTerminateMessage(char *msg){
   string info = msg;
   if(info=="TerminateConncetion"){
@@ -24,10 +23,25 @@ bool isTerminateMessage(char *msg){
 
 }
 
+string stringsplitter(int returnPart, string splittedString, char delimiter){
+  stringstream splittableString(splittedString);
+  string segment;
+  vector<string> seglist;
+
+while(getline(splittableString, segment, delimiter))
+{
+   seglist.push_back(segment);
+}
+  returnPart=returnPart-1;
+  return seglist[returnPart];
+}
+
+
 int main(){ 
   bool keepOpen;
   keepOpen=true;
   int fileData;
+  int report;
   FILE *received_file;
 
     int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
@@ -52,6 +66,8 @@ int main(){
       /*
       todo:
       */
+
+      
       char filenameAndFileSize[ 1024 ] = { 0 };  
       recv(clientSocket, filenameAndFileSize, sizeof(filenameAndFileSize), 0); //get the file back from the server
       cout<<"check if message is termination message"<<"\n";
@@ -92,6 +108,12 @@ int main(){
           cout<<"sending the file back"<<"\n";
           fileData=open(filename.c_str(), O_RDONLY);
           sendfile(clientSocket, fileData, 0, BUFSIZ);
+          sleep(2);
+          string filename_without_filetype=stringsplitter(1,filename,'.');
+          string automatedReport=filename_without_filetype+"automated_report.txt";
+          report=open(automatedReport.c_str(), O_RDONLY);
+          sendfile(clientSocket, report, 0, BUFSIZ);
+          //dataset_name[0]+"automated_report.txt" dataset_name[0]=filename without the.csv 
           remove(filename.c_str()); //remove the file from the server
         }
 }

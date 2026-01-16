@@ -15,7 +15,6 @@ using namespace std;
    ////// 
    //TODO:
    //  
-   //
    //////
 
 string fileExists(string filename){ //check if the file exists
@@ -28,8 +27,6 @@ string file = filename;
         return "unknown error";
     }
 }
-
-
 
  int main(){
     bool keepMessaging=true;
@@ -77,13 +74,23 @@ string file = filename;
         sendfile(clientSocket, fileData, 0, BUFSIZ);
         cout<<"file sent"<<"\n";
         sleep(2);
-        char buffer[ 3072 ] = { 0 };
-        recv(clientSocket, buffer, sizeof(buffer), 0); //get the file back from the server
+        
+
+        int buffersize=stoi(fileSize);
+        char buffer[ buffersize ] = { 0 }; //buffer is slightly too long and it reads part of the report too
+        recv(clientSocket, buffer, sizeof(buffer), 0); //get the cleaned file back from the server
         ofstream filetoedit(sentFile);
         filetoedit<<buffer<<endl;
         filetoedit.close();
-        cout<<"filename: "<<sentFile<<"\n";
-        cout<<"message received from server: "<<buffer<<"\n";
+        
+        char report_buffer[ 3072 ] = { 0 };
+        recv(clientSocket, report_buffer, sizeof(report_buffer), 0); //get the report back from the server
+        ofstream report_file("automated_report.txt");
+        report_file<<report_buffer<<endl;
+        report_file.close();
+
+        //cout<<"filename: "<<sentFile<<"\n";
+        //cout<<"message received from server: "<<buffer<<"\n";
         do{
             cout<<"keep messsaging? (y/n)"<<"\n";
             cin>>keepconnection;
