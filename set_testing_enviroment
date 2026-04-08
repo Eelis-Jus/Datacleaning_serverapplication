@@ -1,0 +1,16 @@
+cp Clientside.cpp ~/codes/data_analytics/servertest/clientsides_for_testing/clientside_1_for_multithreading_testing
+cp Clientside.cpp ~/codes/data_analytics/servertest/clientsides_for_testing/clientside_2_for_multithreading_testing
+cp Clientside.cpp ~/codes/data_analytics/servertest/clientsides_for_testing/clientside_3_for_multithreading_testing
+cp Clientside.cpp ~/codes/data_analytics/servertest/clientsides_for_testing/clientside_4_for_multithreading_testing
+
+cp GenerateCsv.py  ~/codes/data_analytics/servertest/clientsides_for_testing/clientside_1_for_multithreading_testing
+cp generateLargerTestFile.py  ~/codes/data_analytics/clientsides_for_testing/servertest/clientside_2_for_multithreading_testing
+cp GenerateCsv.py  ~/codes/data_analytics/servertest/clientsides_for_testing/clientside_3_for_multithreading_testing 
+cp generateLargerTestFile.py  ~/codes/data_analytics/servertest/clientsides_for_testing/clientside_4_for_multithreading_testing
+
+bash ~/codes/data_analytics/servertest/clientsides_for_testing/clientside_1_for_multithreading_testing/start_test_1.bash & ~/codes/data_analytics/servertest/clientsides_for_testing/clientside_2_for_multithreading_testing/start_test_2.bash & ~/codes/data_analytics/servertest/clientsides_for_testing/clientside_3_for_multithreading_testing/start_test_3.bash & ~/codes/data_analytics/servertest/clientsides_for_testing/clientside_4_for_multithreading_testing/start_test_4.bash
+ 
+
+
+
+
